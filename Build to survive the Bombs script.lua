@@ -8,9 +8,9 @@ local Section2 = Tab2:NewSection("Others")
 Section:NewButton("Tp to safe place", "Tp to safe place", function()
     local BuildPart = Instance.new("Part",game.Workspace) --Directory of The Part
     BuildPart.Size = Vector3.new(100,10,100) 	              --The Size of the Part
-    BuildPart.Position = Vector3.new(196, 500, 73)      --The Position of The Part
-    BuildPart.Anchored = true                             --Anchores The Part                           --Anchores The Part
-game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(196, 510, 73)
+    BuildPart.Position = Vector3.new(196, -200, 73)      --The Position of The Part
+    BuildPart.Anchored = true                          --Anchores The Part                           --Anchores The Part
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(196, -190, 73)
 end)
 
 Section:NewButton("Invisible", "Invisible", function()
@@ -63,13 +63,13 @@ end)
 
 Section:NewToggle("Auto Safe", "Teleports You To Safe place!", function(state)
     if state then
-local BuildPart = Instance.new("Part",game.Workspace) --Directory of The Part
-BuildPart.Size = Vector3.new(100,10,100) 	              --The Size of the Part
-BuildPart.Position = Vector3.new(196, 500, 73)      --The Position of The Part
-BuildPart.Anchored = true                             --Anchores The Part
+        local BuildPart = Instance.new("Part",game.Workspace) --Directory of The Part
+        BuildPart.Size = Vector3.new(100,10,100) 	              --The Size of the Part
+        BuildPart.Position = Vector3.new(196, -200, 73)      --The Position of The Part
+        BuildPart.Anchored = true                          --Anchores The Part
     getgenv().Farming1 = true
             while Farming1 == true do
-                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(196, 510, 73)
+                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(196, -190, 73)
                 wait(1)
     end
 else
