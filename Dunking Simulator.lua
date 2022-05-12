@@ -38,8 +38,6 @@ end)
 
 Section:NewLabel("Made by Hai#5694")
 Section2:NewLabel("Anti-AFK is always on")
-Section2:NewLabel("Andy is dog wof~wof~")
-Section2:NewLabel("Andy is dumb")
 Section:NewLabel("GG for the game")
 local vu = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:connect(function()
