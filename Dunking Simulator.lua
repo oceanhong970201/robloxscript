@@ -1,8 +1,8 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("By Hai#5694", "BloodTheme")
+local Window = Library.CreateLib("Dunking Simulator", "BloodTheme")
 local Tab1 = Window:NewTab("Main")
 local Tab2 = Window:NewTab("Others")
-local Section = Tab1:NewSection("Andy is dog")
+local Section = Tab1:NewSection("Main")
 local Section2 = Tab2:NewSection("Other")
 
 Section:NewTextBox("Enter cash amount", "cash amount", function(txt)
