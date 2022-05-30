@@ -1,0 +1,165 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Mining Simulator 2", "DarkTheme")
+local Tab1 = Window:NewTab("Main")
+local Tab2 = Window:NewTab("Others")
+local Tab3 = Window:NewTab("Universal")
+local Section = Tab1:NewSection("Farm")
+local Section2 = Tab2:NewSection("Others")
+local Section3 = Tab3:NewSection("Universal")
+--\\functions//
+function breakblock(pos)
+    local args = {
+        [1] = pos
+    }
+ 
+    game:GetService("ReplicatedStorage").Events.MineBlock:FireServer(unpack(args))
+ end
+ 
+ local Mod = require(game:GetService("ReplicatedStorage").SharedModules.ChunkUtil)
+ 
+ function getPartBelow()
+    local Character = game.Players.LocalPlayer.Character
+    local Foot = Character.RightFoot
+    local RayOrigin = Foot.Position
+    local RayDirection = Vector3.new(0, -1, 0)
+ 
+    local Params = RaycastParams.new()
+    Params.FilterType = Enum.RaycastFilterType.Blacklist
+    Params.FilterDescendantsInstances = {Character}
+ 
+    local Result = workspace:Raycast(RayOrigin, RayDirection, Params)
+ 
+    if Result then
+        local RayInstance = Result.Instance
+        print("Instance hit: " .. tostring(RayInstance))
+        return RayInstance
+    end
+ 
+    return nil
+ end
+--\\goble environment//--
+getgenv().Farming1 = false
+--\\main script//--
+Section:NewButton("Tp Closest Chest", "Tp Closest Chest", function()
+    local player = game.Players.LocalPlayer
+    function toTarget(pos, targetPos, targetCFrame)
+        local tween_s = game:service"TweenService"
+        local info = TweenInfo.new((targetPos - pos).Magnitude/getgenv().speed, Enum.EasingStyle.Linear)
+        local tween, err = pcall(function()
+            local tween = tween_s:Create(game:GetService("Players").LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = targetCFrame * CFrame.fromAxisAngle(Vector3.new(1,0,0), math.rad(90))})
+            tween:Play()
+        end)
+        if not tween then return err end
+    end
+    getgenv().speed = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
+    function ClosestPart()
+        local dist = math.huge
+        local target = nil
+        for i,v in pairs(game:GetService("Workspace").Chests:GetChildren()) do
+            local magnitude = (v.Part.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
+            if magnitude < dist then
+                dist = magnitude
+                target = v.Part
+            end
+        end
+        return target
+    end
+    toTarget(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position,ClosestPart().Position ,CFrame.new(ClosestPart().Position+Vector3.new(0,0,0)))
+end)
+
+Section:NewButton("Sell", "Sell", function()
+local args = {[1] = "SurfaceSell"}game:GetService("ReplicatedStorage").Events.Teleport:FireServer(unpack(args))
+end)
+
+Section:NewToggle("Auto Mine", "Auto Mine", function(state)
+    Farming1 = state
+    print("Auto Farm is:", state)
+    if state and Farming1 then
+         while Farming1 do
+            task.wait()
+            local closest = getPartBelow()
+            if closest ~= nil then
+                local Pos = closest.Position
+                local NewPos = Mod.worldToCell(Pos)
+                task.spawn(
+                    function()
+                        breakblock(NewPos)
+                    end
+                )
+            end
+         end         
+    end
+end)
+
+local Case = nil
+Section:NewDropdown("Choose Chest", "Choose Chest", {"Wood", "Silver", "Gold","Epic", "Legendary"}, function(currentCase)
+    print(currentCase)
+    Case = currentCase
+end)
+
+Section:NewButton("Go to Choose Chest", "Go to Choose Chest", function()
+    local _speed=50 -- lower if you are getting tp'd back (shouldn't happen)
+function tp(...)
+  local plr=game.Players.LocalPlayer
+  local args={...}
+  if typeof(args[1])=="number"and args[2]and args[3]then
+     args=Vector3.new(args[1],args[2],args[3])
+  elseif typeof(args[1])=="Vector3" then
+      args=args[1]    
+  elseif typeof(args[1])=="CFrame" then
+      args=args[1].Position
+  end
+  local dist=(plr.Character.HumanoidRootPart.Position-args).Magnitude
+  game:GetService("TweenService"):Create(
+      plr.Character.HumanoidRootPart,
+      TweenInfo.new(dist/_speed,Enum.EasingStyle.Linear),
+      {CFrame=CFrame.new(args)}
+  ):Play()
+end
+
+for i,v in pairs(game:GetService("Workspace").Chests:GetChildren()) do
+   if v.Name == Case then -- Change the name to "Wood", "Silver", "Gold", "Epic" or "Legendary"
+     tp(game:GetService("Workspace").Chests..Case.Part.Position) -- Change The Path too to .Wood, .Silver, .Gold, .Epic or ,Legendary
+end
+end
+ end)
+
+local Map = nil
+Section2:NewDropdown("Choose World", "Choose World", {"Surface", "Hidden Treasure", "Frozen Depths","Gloomy Basin", "Molten Core", "The Underworld"}, function(currentOption)
+    print(currentOption)
+    Map = currentOption
+end)
+
+Section2:NewButton("Tp to the world", "Tp to the world", function()
+    local args = {[1] = Map}game:GetService("ReplicatedStorage").Events.Teleport:FireServer(unpack(args))
+end)
+
+Section2:NewKeybind("Press F to open/close", "KeybindInfo", Enum.KeyCode.F, function()
+    Library:ToggleUI()
+end)
+
+Section2:NewLabel("Made by ⌓‿⌓#0850")
+Section2:NewLabel("Anti-AFK is always on")
+
+local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(1)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+Section3:NewSlider("Walkspeed Changer", "Walkspeed Changer", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
+
+Section3:NewSlider("Jumppower Changer", "Jumppower Changer", 500, 0, function(a) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower  = a
+end)
+
+Section3:NewButton("Ctrl+Click TP", "Ctrl+Click TP", function()
+mouse.Button1Down:connect(function()
+if not game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then return end
+if not mouse.Target then return end
+Plr.Character:MoveTo(mouse.Hit.p)
+end)
+end)
