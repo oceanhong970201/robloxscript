@@ -1,0 +1,208 @@
+if not game:IsLoaded() then
+    repeat wait() until game:IsLoaded()
+end
+if game.PlaceId == 7329371101 then 
+getgenv().AutoAttack = false
+getgenv().AutoSell = false
+getgenv().AutoEgg = false
+getgenv().AutoBackPack = false
+--\\UI//--
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Airplane Attack Simulator", "DarkTheme")
+local Tab1 = Window:NewTab("Main")
+local Tab2 = Window:NewTab("Others")
+local Section = Tab1:NewSection("Farm")
+local Section2 = Tab2:NewSection("Others")
+--\\functions//--
+local Gun = nil
+function getgun()
+for i,v in pairs(game:GetService("Players"):GetChildren()) do
+    if v == game.Players.LocalPlayer then
+        for o,p in pairs(v:GetChildren()) do
+            if p:IsA "StringValue" and p.Name == "EquippedGun" then
+                Gun = p.value
+            end
+        end
+    end
+end
+end
+function Sell()
+    spawn(function()
+        while AutoSell == true do
+            game:GetService("ReplicatedStorage").Sell_Iron:FireServer()
+            wait(0.1)
+        end
+    end)
+end
+function BackPack()
+    spawn(function ()
+        while AutoBackPack == true do
+            local args = {
+                [1] = game:GetService("Players").LocalPlayer
+            }
+            
+            game:GetService("ReplicatedStorage").PlayerUpgradedBackpack:FireServer(unpack(args))
+            wait(.1)
+        end
+    end)   
+end
+
+--\\section//--
+Section:NewLabel("AutoShootPlanes(equip ur gun)")
+Section:NewLabel("Don't enalbe too much areas together, or ur ping will go 999+")
+Section:NewToggle("StarterAreaPlane ", "StarterAreaPlane", function(a)
+    StarterAreaPlane = a
+    print("StarterAreaPlane is:", a)
+    while StarterAreaPlane and a == true do
+        getgun()
+        local args = {
+            [1] = workspace.StarterAreaPlanes.StarterAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))
+        wait(.1)
+    end
+end)
+
+Section:NewToggle("CandyAreaPlanes ", "CandyAreaPlanes", function(l)
+    CandyAreaPlanes = l
+    print("CandyAreaPlanes is:", l)
+    while CandyAreaPlanes and l == true do
+        getgun()
+        local args = {
+            [1] = workspace.CandyAreaPlanes.CandyAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))
+        wait()
+    end
+end)
+
+Section:NewToggle("DesertAreaPlanes ", "DesertAreaPlanes", function(m)
+    DesertAreaPlanes = m
+    print("DesertAreaPlanes is:", m)
+    while DesertAreaPlanes and m == true do
+        getgun()
+        local args = {
+            [1] = workspace.DesertAreaPlanes.DesertAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))        
+        wait()
+    end
+end)
+
+Section:NewToggle("MoonAreaPlanes ", "MoonAreaPlanes", function(n)
+    MoonAreaPlanes = n
+    print("MoonAreaPlanes is:", n)
+    while MoonAreaPlanes and n == true do
+        getgun()
+        local args = {
+            [1] = workspace.MoonAreaPlanes.MoonAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))
+        wait()
+    end
+end)
+
+Section:NewToggle("MysticForestAreaPlanes ", "MysticForestAreaPlanes", function(t)
+    MysticForestAreaPlanes = t
+    print("MysticForestAreaPlanes is:", t)
+    while MysticForestAreaPlanes and t == true do
+        getgun()
+        local args = {
+            [1] = workspace.MysticForestAreaPlanes.MysticForestAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))
+        wait()
+    end
+end)
+
+Section:NewToggle("BeachAreaPlanes ", "BeachAreaPlanes", function(u)
+    BeachAreaPlanes = u
+    print("BeachAreaPlanes is:", u)
+    while BeachAreaPlanes and u == true do
+        getgun()
+        local args = {
+            [1] = workspace.BeachAreaPlanes.BeachAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))
+        wait()
+    end
+end)
+
+Section:NewToggle("GlacierAreaPlanes ", "GlacierAreaPlanes", function(w)
+    GlacierAreaPlanes = w
+    print("GlacierAreaPlanes is:", w)
+    while GlacierAreaPlanes and w == true do
+        getgun()
+        local args = {
+            [1] = workspace.GlacierAreaPlanes.GlacierAreaPlane
+        }
+        
+        game:GetService("ReplicatedStorage").GunSystemEvents[tostring(Gun)].Fire:FireServer(unpack(args))
+        wait()
+    end
+end)
+Section:NewLabel("AutoSell")
+Section:NewToggle("AutoSell", "AutoSell", function(b)
+    AutoSell = b
+    print("AutoSell is:", b)
+    if AutoSell and b then
+        Sell()
+    end
+end)
+Section:NewLabel("UpgradeBackPack")
+Section:NewToggle("UpgradeBackPack", "UpgradeBackPack", function(c)
+    AutoBackPack = c
+    print("AutoSell is:", c)
+    if AutoBackPack and c then
+        BackPack()
+    end
+end)
+Section:NewLabel("Claim Chest")
+Section:NewButton("Claim Chest", "Claim Chest", function()
+    game:GetService("ReplicatedStorage").Collect_Chests:FindFirstChild("Godly Chest"):FireServer()
+end)
+Section:NewLabel("Buy All Area")
+Section:NewButton("Buy All Area", "Buy All Area", function()
+    game:GetService("ReplicatedStorage").Areas.Candy:FireServer()
+    wait(.1)
+    game:GetService("ReplicatedStorage").Areas.Desert:FireServer()
+    wait(.1)
+    game:GetService("ReplicatedStorage").Areas.Moon:FireServer()
+    wait(.1)
+    game:GetService("ReplicatedStorage").Areas.MysticForest:FireServer()
+    wait(.1)
+    game:GetService("ReplicatedStorage").Areas.Beach:FireServer()
+    wait(.1)
+    game:GetService("ReplicatedStorage").Areas.Glacier:FireServer()
+    wait(.1)
+end)
+
+Section2:NewSlider("Walkspeed Changer", "Walkspeed Changer", 500, 0, function(ws) 
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = ws
+end)
+
+Section2:NewSlider("Jumppower Changer", "Jumppower Changer", 500, 0, function(jp) 
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower  = jp
+end)
+
+Section2:NewKeybind("F to toggle on/off", "F", Enum.KeyCode.F, function()
+	Library:ToggleUI()
+end)
+
+Section2:NewLabel("Made by SummerTime#0850")
+Section2:NewLabel("Anti-AFK is always on")
+local vu = game:GetService("VirtualUser")
+
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(1)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+end
+--\\end//--
