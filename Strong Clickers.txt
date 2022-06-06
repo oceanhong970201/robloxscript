@@ -1,0 +1,159 @@
+if not game:IsLoaded() then
+    repeat wait() until game:IsLoaded()
+end
+if game.PlaceId == 9522149469 then 
+local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
+
+local w = library:CreateWindow("Strong Clickers!") -- Creates the window
+
+local b = w:CreateFolder("Farm")
+local c = w:CreateFolder("Pets")
+local d = w:CreateFolder("Teleportion")  -- Creates the folder(U will put here your buttons,etc)
+local e = w:CreateFolder("Other")
+egg = {}
+for i,v in pairs(game:GetService("Workspace").Eggs:GetChildren()) do
+    table.insert(egg,v)
+end
+world = {}
+for i,v in pairs(game:GetService("Workspace").Portals.Locations:GetChildren()) do
+    table.insert(world,v)
+end
+b:Toggle("Auto Strength",function(bool)
+    shared.toggle = bool
+    Strength = bool
+    print(Strength,bool)
+end)
+
+b:Toggle("Auto Sell",function(bool)
+    shared.toggle = bool
+    Sell = bool
+    print(Sell,bool)
+end)
+
+b:Toggle("Auto BuffStrength",function(bool)
+    shared.toggle = bool
+    BuffStrength = bool
+    print(BuffStrength,bool)
+end)
+b:Button("Rebirth",function()
+    game:GetService("ReplicatedStorage").Remotes.Rebirth:FireServer()
+end)
+b:Toggle("Auto Rebirth",function(bool)
+    shared.toggle = bool
+    AutoRebirth = bool
+    print(AutoRebirth,bool)
+end)
+
+b:Button("Remove Some Popups",function()
+    pcall(function() game:GetService("Players").LocalPlayer.PlayerGui.Interface.ScreenDebris:Destroy() end)
+end)
+
+c:Dropdown("Egg",egg,true,function(a) --true/false, replaces the current title "Dropdown" with the option that t
+    SelectedEgg = a
+    print(SelectedEgg)
+end)
+
+c:Toggle("Auto Egg",function(bool)
+    shared.toggle = bool
+    AutoEgg = bool
+    print(AutoEgg,bool)
+end)
+
+c:Button("EquipBest",function()
+    game:GetService("ReplicatedStorage").Remotes.Pets.EquipBest:FireServer()
+end)
+
+c:Button("CombineAll",function()
+    game:GetService("ReplicatedStorage").Remotes.Pets.CombineAll:FireServer()
+end)
+
+d:Dropdown("Wrorld",world,true,function(b) --true/false, replaces the current title "Dropdown" with the option that t
+    SelectedEWorld = b
+    print(SelectedEWorld)
+end)
+
+d:Button("Tp Selected World",function()
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Portals.Locations[tostring(SelectedEWorld)].CFrame
+end)
+
+d:Button("Tp Spawn",function()
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Portals.ReturnSpawn.CFrame
+end)
+
+d:Button("Upgrades Shop",function()
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").TriggerAreas.Upgrades.Platform.CFrame
+end)
+
+e:Slider("WalkSpeed",{
+    min = 20; 
+    max = 200; 
+    precise = true; 
+},function(value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+end)
+e:Label("Made by SummerTime#0850",{
+    TextSize = 15; 
+    TextColor = Color3.fromRGB(255,255,255); 
+    BgColor = Color3.fromRGB(69,69,69); 
+    
+})
+e:DestroyGui()
+spawn(function()
+    while wait() do
+        if Strength == true then
+            for i = 1,5 do
+                game:GetService("ReplicatedStorage").Remotes.TrainStrength:FireServer()
+            end
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if Sell == true then
+            for i,v in pairs(game:GetService("Workspace").TriggerAreas:GetDescendants()) do
+                if v:IsA"TouchTransmitter" and v.Parent.Name == "Trigger" then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1)
+                end
+            end
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if AutoEgg == true then
+            local args = {
+                [1] = tostring(SelectedEgg)
+            }
+            
+            game:GetService("ReplicatedStorage").Remotes.HatchEgg:FireServer(unpack(args))
+        end
+    end
+end)
+
+spawn(function()
+    while wait(.5) do
+        if BuffStrength == true then
+                game:GetService("ReplicatedStorage").Remotes.BuffStrength:FireServer()
+        end
+    end
+end)
+
+spawn(function()
+    while wait(5) do
+        if AutoRebirth == true then
+                game:GetService("ReplicatedStorage").Remotes.Rebirth:FireServer()
+        end
+    end
+end)
+
+local vu = game:GetService("VirtualUser")
+
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(1)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+end
