@@ -31,7 +31,9 @@ b:Toggle("Auto BuffStrength",function(bool)
     BuffStrength = bool
     print(BuffStrength,bool)
 end)
-
+b:Button("Rebirth",function()
+    game:GetService("ReplicatedStorage").Remotes.Rebirth:FireServer()
+end)
 b:Toggle("Auto Rebirth",function(bool)
     shared.toggle = bool
     AutoRebirth = bool
