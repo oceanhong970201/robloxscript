@@ -1,0 +1,164 @@
+if not game:IsLoaded() then
+    repeat wait() until game:IsLoaded()
+end
+if game.PlaceId == 5857759558 then 
+local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+local w = library:CreateWindow(tostring(GameName)) -- Creates the window
+local CoreGui = game:GetService("StarterGui") 
+local b = w:CreateFolder("Farm")
+local c = w:CreateFolder("Pets")
+local d = w:CreateFolder("Teleportion")  -- Creates the folder(U will put here your buttons,etc)
+local e = w:CreateFolder("Other")
+local vu = game:GetService("VirtualUser")
+egg = {}
+for i,v in pairs(game:GetService("Workspace").Map.PetCapsules:GetChildren()) do
+    table.insert(egg,v)
+end
+world = {}
+for i,v in pairs(game:GetService("Workspace").Map.Teleporters:GetChildren()) do
+    table.insert(world,v)
+end
+
+b:Toggle("Auto Level Up",function(bool)
+    shared.toggle = bool
+    Strength = bool
+    print(Strength,bool)
+end)
+
+b:Toggle("Auto Coin",function(bool)
+    shared.toggle = bool
+    Coin = bool
+    print(Coin,bool)
+end)
+
+b:Toggle("Auto Gem",function(bool)
+    shared.toggle = bool
+    Gem = bool
+    print(Gem,bool)
+end)
+
+c:Dropdown("Egg",egg,true,function(a) --true/false, replaces the current title "Dropdown" with the option that t
+    SelectedEgg = a
+    print(SelectedEgg)
+end)
+
+c:Toggle("Auto Egg",function(bool)
+    shared.toggle = bool
+    AutoEgg = bool
+    print(AutoEgg,bool)
+end)
+d:Dropdown("World",world,true,function(b) --true/false, replaces the current title "Dropdown" with the option that t
+    SelectedWorld = b
+    print(SelectedWorld)
+end)
+
+d:Button("Tp Selected World",function()
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Teleporters[tostring(SelectedWorld)].RemoveUnlock.CFrame
+end)
+
+d:Button("To Spawn",function()
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.MainIsle.SpawnLocations.SpawnLocation.CFrame
+end)
+
+d:Button("Open Shop",function()
+    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,game:GetService("Workspace").Map.ShopParts.ShopPart, 0) 
+    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,game:GetService("Workspace").Map.ShopParts.ShopPart, 1)
+end)
+
+e:Slider("WalkSpeed",{
+    min = 20; 
+    max = 200; 
+    precise = true; 
+},function(value)
+    spawn(function ()
+        pcall(function ()
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+        end)
+    end)
+end)
+e:Label("Made by SummerTime#0850",{
+    TextSize = 15; 
+    TextColor = Color3.fromRGB(255,255,255); 
+    BgColor = Color3.fromRGB(69,69,69); 
+    
+})
+e:Button("Discord server",function()
+    setclipboard("https://discord.gg/Yg8BWvEVzE")
+    CoreGui:SetCore("SendNotification", {
+        Title = "Link Set to clipboard",
+        Text = "Link Set to clipboard",
+       Duration = 3;
+       })
+end)
+e:DestroyGui()
+spawn(function()
+    while wait() do
+        if Strength == true then
+            for i = 1 , 5 do
+                local args = {
+                    [1] = math.huge
+                }
+                
+                game:GetService("ReplicatedStorage").Remotes.Training:FireServer(unpack(args))
+            end
+        end
+    end
+end)
+
+spawn(function()
+    while wait(.5) do
+        if Coin == true then
+            pcall(function ()
+                for _,v in pairs(game:GetService("Workspace").CoinsSpawned:GetDescendants()) do
+                    if v:IsA("TouchTransmitter") and v.Parent then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+spawn(function()
+    while wait(.5) do
+        if Gem == true then
+            pcall(function ()
+                for _,v in pairs(game:GetService("Workspace").GemsSpawned:GetDescendants()) do
+                    if v:IsA("TouchTransmitter") and v.Parent then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
+                    end
+                end  
+            end)          
+        end
+    end
+end)
+
+
+spawn(function()
+    while wait() do
+        if AutoEgg == true then
+            local args = {
+                [1] = tostring(SelectedEgg),
+                [2] = false
+            }
+            
+            game:GetService("ReplicatedStorage").Remotes.Open1:FireServer(unpack(args))
+        end
+    end
+end)
+
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(1)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+CoreGui:SetCore("SendNotification", {
+ Title = "Script Loaded",
+ Text = "Script Loaded",
+Duration = 3;
+})
+end
