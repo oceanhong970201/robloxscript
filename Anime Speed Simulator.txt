@@ -1,0 +1,355 @@
+if not game:IsLoaded() then
+    repeat wait() until game:IsLoaded()
+end
+if game.PlaceId == 8950974597 then 
+    --\\UI//--
+local CoreGui = game:GetService("StarterGui") 
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib(tostring(GameName), tostring(_G.Theme))
+local Tab1 = Window:NewTab("Main")
+local Tab2 = Window:NewTab("Misc")
+local Tab3 = Window:NewTab("Teleportion")
+local Tab6 = Window:NewTab("Others")
+local Section = Tab1:NewSection("Farm")
+local Section2 = Tab2:NewSection("Misc")
+local Section3 = Tab3:NewSection("Teleportion")
+local Section6 = Tab6:NewSection("Others")
+CoreGui:SetCore("SendNotification", {
+    Title = "Game Founded",
+    Text = "Game:"..GameName,
+   Duration = 3;
+   })
+--\\functions//--
+function collectOrbs(world)
+    for i,v in pairs(game:GetService("Workspace").Areas.Arctic.Orbs:GetChildren()) do
+        local args = {
+            [1] = workspace.Areas[world].Orbs[v.Name]
+        }
+        
+        game:GetService("ReplicatedStorage").Events.Pickup:FireServer(unpack(args))
+    end
+end
+function collecthoops()
+    for i,v in pairs(game:GetService("Workspace").Areas:GetDescendants()) do
+        if v.Name == "Hoops" and v:IsA("Folder") then
+            for o,p in pairs(v:GetDescendants()) do
+                if p:IsA("TouchTransmitter") then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, p.Parent, 0)
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, p.Parent, 1)
+                end
+            end
+        end
+    end
+end
+function tpOrbstou(world)
+    for i,v in pairs(game:GetService("Workspace").Areas[world].Orbs:GetDescendants()) do
+        if v:IsA("MeshPart") then
+            v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        end
+    end
+end
+function tphoopstou(wold)
+    for i,v in pairs(game:GetService("Workspace").Areas[wold].Hoops:GetDescendants()) do
+        if v:IsA("MeshPart") or v:IsA("Part") then
+            v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        end
+    end
+end
+function run()
+    game:GetService("ReplicatedStorage").Events.Training:FireServer()
+end
+function egg(eggname)
+    local args = {
+        [1] = tostring(eggname)
+    }
+    
+    game:GetService("ReplicatedStorage").Events.Hatch:FireServer(unpack(args))
+end
+function tripleegg(tripeggname)
+    local args = {
+        [1] = tostring(tripeggname),
+        [2] = true
+    }
+    
+    game:GetService("ReplicatedStorage").Events.Hatch:FireServer(unpack(args))
+end
+--\\serverhop -cridit to CharWar
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+local File = pcall(function()
+    AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+end)
+if not File then
+    table.insert(AllIDs, actualHour)
+    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+end
+function TPReturner()
+    local Site;
+    if foundAnything == "" then
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+    else
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+    end
+    local ID = ""
+    if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+        foundAnything = Site.nextPageCursor
+    end
+    local num = 0;
+    for i,v in pairs(Site.data) do
+        local Possible = true
+        ID = tostring(v.id)
+        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+            for _,Existing in pairs(AllIDs) do
+                if num ~= 0 then
+                    if ID == tostring(Existing) then
+                        Possible = false
+                    end
+                else
+                    if tonumber(actualHour) ~= tonumber(Existing) then
+                        local delFile = pcall(function()
+                            delfile("NotSameServers.json")
+                            AllIDs = {}
+                            table.insert(AllIDs, actualHour)
+                        end)
+                    end
+                end
+                num = num + 1
+            end
+            if Possible == true then
+                table.insert(AllIDs, ID)
+                wait()
+                pcall(function()
+                    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                    wait()
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+                end)
+                wait(4)
+            end
+        end
+    end
+end
+
+function Teleport()
+    while wait() do
+        pcall(function()
+            TPReturner()
+            if foundAnything ~= "" then
+                TPReturner()
+            end
+        end)
+    end
+end
+--\\section 1//--
+Section:NewToggle("Auto Speed", "Auto Speed", function(a)
+    AutoSpeed = a
+    while AutoSpeed and a  ==  true do
+        run()
+        task.wait()
+    end
+end)
+Section:NewLabel("Auto Collect(Remote)")
+local WorldToCollect
+Section:NewDropdown("World To Collect", "Worlds", {"Meadows", "Arctic", "Oasis","Underworld", "Atlantis"}, function(CHOOSEWORLD)
+     print(CHOOSEWORLD)
+     WorldToCollect = CHOOSEWORLD
+end)
+Section:NewToggle("Auto Collect Orbs", "Collect Orbs", function(b)
+    AutoOrbs = b
+    while AutoOrbs and b  ==  true do
+        collectOrbs(WorldToCollect)
+        task.wait(5)
+    end
+end)
+Section:NewToggle("Auto Hoops", "Auto Hoops", function(c)
+    AutoHoops = c
+    while AutoHoops and c  ==  true do
+        collecthoops()
+        task.wait(5)
+    end
+end)
+Section:NewButton("Collect Selected World's CharacterOrbs", "CharacterOrbs", function()
+    for i,v in pairs(game:GetService("Workspace").Areas[WorldToCollect].CharacterOrbs:GetChildren()) do
+        local args = {
+            [1] = workspace.Areas[WorldToCollect].CharacterOrbs[v.Name]
+        }
+        
+        game:GetService("ReplicatedStorage").Events.CharacterOrb:FireServer(unpack(args))
+    end
+    CoreGui:SetCore("SendNotification", {
+        Title = "All CharacterOrbs Collected",
+        Text = "CharacterOrbs Collected",
+       Duration = 3;
+       })
+end)
+Section:NewLabel("Auto Collect(Tp to You)")
+Section:NewToggle("Auto TP Orbs", "Collect Orbs", function(d)
+    AutoTPOrbs = d
+    while AutoTPOrbs and d  ==  true do
+        tpOrbstou(WorldToCollect)
+        task.wait(1)
+    end
+end)
+Section:NewToggle("Auto TP Hoops", "Auto Hoops", function(e)
+    AutoTPHoops = e
+    while AutoTPHoops and e  ==  true do
+        tphoopstou(WorldToCollect)
+        task.wait(1)
+    end
+end)
+Section2:NewLabel("Pets")
+local EggToBuy
+Section2:NewDropdown("Egg To Buy", "Eggs", {"DragonStarDispenser", "ShinobiStarDispenser", "PirateStarDispenser","DemonStarDispenser", "PunchStarDispenser"}, function(CHOOSEEGG)
+     print(CHOOSEEGG)
+     EggToBuy = CHOOSEEGG
+end)
+Section2:NewToggle("Auto Buy Egg", "Buy Egg", function(f)
+    AutoBuyEGG = f
+    while AutoBuyEGG and f  ==  true do
+        egg(EggToBuy)
+        task.wait()
+    end
+end)
+Section2:NewToggle("Auto 3x Buy Egg", "Buy 3x Egg", function(g)
+    AutoBuy3XEGG = g
+    while AutoBuy3XEGG and g  ==  true do
+        tripleegg(EggToBuy)
+        task.wait()
+    end
+end)
+Section2:NewLabel("Auto Rebirth")
+Section2:NewToggle("Auto Rebirth", "Auto Rebirth", function(i)
+    AutoRebirth = i
+    while AutoRebirth and i  ==  true do
+        game:GetService("ReplicatedStorage").Events.Rebirth:FireServer()
+        task.wait(2.5)
+    end
+end)
+Section2:NewLabel("Trails")
+Section2:NewToggle("Auto Buy Trails", "Auto Buy Trails", function(h)
+    AutoBuyTrails = h
+    while AutoBuyTrails and h  ==  true do
+        for i,v in pairs(game:GetService("ReplicatedStorage").Trails:GetChildren()) do
+            local args = {
+                [1] = tostring(v.Name)
+            }
+            
+            game:GetService("ReplicatedStorage").Events.BuyTrail:FireServer(unpack(args))
+        end
+        task.wait(1)
+    end
+end)
+Section3:NewLabel("Worlds")
+Section3:NewButton("Tp to Meadows", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Areas.Meadows.ReturnPoint.CFrame
+    local args = {
+        [1] = "Meadows"
+    }
+    
+    game:GetService("ReplicatedStorage").Events.SetCurrentArea:FireServer(unpack(args))
+end)
+Section3:NewButton("Tp to Arctic", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Areas.Arctic.ReturnPoint.CFrame
+    local args = {
+        [1] = "Arctic"
+    }
+    
+    game:GetService("ReplicatedStorage").Events.SetCurrentArea:FireServer(unpack(args))
+end)
+Section3:NewButton("Tp to Oasis", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Areas.Oasis.ReturnPoint.CFrame
+    local args = {
+        [1] = "Oasis"
+    }
+    
+    game:GetService("ReplicatedStorage").Events.SetCurrentArea:FireServer(unpack(args))
+end)
+Section3:NewButton("Tp to Underworld", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Areas.Underworld.ReturnPoint.CFrame
+    local args = {
+        [1] = "Underworld"
+    }
+    
+    game:GetService("ReplicatedStorage").Events.SetCurrentArea:FireServer(unpack(args))
+end)
+Section3:NewButton("Tp to Atlantis", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Areas.Atlantis.ReturnPoint.CFrame
+    local args = {
+        [1] = "Atlantis"
+    }
+    
+    game:GetService("ReplicatedStorage").Events.SetCurrentArea:FireServer(unpack(args))
+end)
+Section3:NewLabel("Machines")
+Section3:NewButton("Tp to Shiny Machine", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Shiny["Prompt Part"].CFrame
+end)
+Section3:NewButton("Tp to Radioactive", "tp", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Radioactive.PromptPart.CFrame
+end)
+
+--\\Section6//--
+Section6:NewButton("Redeem Codes", "Redeem Codes", function()
+    local CodesTable = {"SCOTTY","RELEASE","2XYEN","FLYES","DEMON","VEXX"}
+    for i = 1, 5 do
+        for i ,v in pairs(CodesTable) do
+            game:GetService("ReplicatedStorage").Events.UseCode:InvokeServer(v)
+        end
+    end
+end)
+Section6:NewButton("Auto Verify Twitter and Discord", "Auto Verify Twitter and Discord", function()
+    for i = 1,5 do
+        game:GetService("ReplicatedStorage").Events.VerifyFollow:InvokeServer("@HOPOPDAILY")
+        game:GetService("ReplicatedStorage").Events.VerifyJoin:InvokeServer("(_\227\128\128_)\227\128\130\227\130\156Z\239\189\154\239\188\186#0850")
+    end
+end)
+Section6:NewButton("Rejoin Server", "Rejoin Server", function()
+    pcall(function ()
+        spawn(function ()
+            game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+        end)
+    end)
+end)
+Section6:NewButton("ServerHop", "ServerHop", function()
+    pcall(function ()
+        spawn(function ()
+            Teleport()
+        end)
+    end)
+end)
+Section6:NewSlider("Walkspeed Changer", "Walkspeed Changer", 500, 16, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
+
+Section6:NewSlider("Jumppower Changer", "Jumppower Changer", 500, 50, function(a) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower  = a
+end)
+
+Section6:NewKeybind("F to toggle on/off", "F", Enum.KeyCode.F, function()
+	Library:ToggleUI()
+end)
+Section6:NewLabel("Made by (_　_)。゜zｚＺ#0850")
+Section6:NewLabel("Anti-AFK is always on")
+Section6:NewLabel("Will AutoRejoin If Kicked")
+local vu = game:GetService("VirtualUser")
+
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(1)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+getgenv().rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+    if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+        game:GetService("TeleportService"):Teleport(game.PlaceId)
+    end
+end)
+end
+game:GetService("StarterGui") :SetCore("SendNotification", {
+    Title = "Script Loaded",
+    Text = "Thanks For Using, Discord Server link copied to ur clipboard",
+   Duration = 6;
+   })
+--\\end//--
