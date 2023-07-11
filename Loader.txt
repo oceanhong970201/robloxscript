@@ -1,4 +1,3 @@
-local CoreGui = game:GetService("StarterGui") 
 CoreGui:SetCore("SendNotification", {
  Title = "Script loading",
  Text = "Checking Game",
@@ -31,6 +30,9 @@ elseif game.PlaceId == 8303902695 then
     loadstring(game:HttpGet(('https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Pet%20Posse.lua')))()
 elseif game.PlaceId == 8950974597 then
     loadstring(game:HttpGet(('https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Anime%20Speed%20Simulator.txt')))()
+elseif game.PlaceId == 12919101820 then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Glass%20Bridge%20Challenge.lua"))()
+local CoreGui = game:GetService("StarterGui") 
 else
     game.Players.LocalPlayer:Kick("Game Not Supported")
 end
@@ -42,4 +44,3 @@ Button1 = "discord.gg/Jw43TjBDur",
 Duration = math.huge
 })
 setclipboard("https://discord.gg/Jw43TjBDur")
-
