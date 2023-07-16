@@ -33,6 +33,8 @@ elseif game.PlaceId == 8950974597 then
     loadstring(game:HttpGet(('https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Anime%20Speed%20Simulator.txt')))()
 elseif game.PlaceId == 12919101820 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Glass%20Bridge%20Challenge.lua"))()
+elseif game.PlaceID == 13914646778 then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Grimace%20Shake.lua"))()
 local CoreGui = game:GetService("StarterGui") 
 else
     game.Players.LocalPlayer:Kick("Game Not Supported")
