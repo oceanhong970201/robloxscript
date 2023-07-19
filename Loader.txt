@@ -1,4 +1,5 @@
 local CoreGui = game:GetService("StarterGui") 
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 CoreGui:SetCore("SendNotification", {
  Title = "Script loading",
  Text = "Checking Game",
@@ -38,6 +39,8 @@ elseif game.PlaceId == 13914646778 then
 elseif game.PlaceId == 13367177208 then
     getgenv().Enable = true --true/falst to turn on/off
     loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Ice%20Cream%20Empire%20Tycoon.lua"))()
+elseif GameName == "Cart Rider" then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Create%20a%20Cart%20Ride.lua"))()
 else
     game.Players.LocalPlayer:Kick("Game Not Supported")
 end
