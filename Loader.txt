@@ -35,7 +35,9 @@ elseif game.PlaceId == 12919101820 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Glass%20Bridge%20Challenge.lua"))()
 elseif game.PlaceId == 13914646778 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Grimace%20Shake.lua"))()
-local CoreGui = game:GetService("StarterGui") 
+elseif game.PlaceId == 13367177208 then
+    getgenv().Enable = true --true/falst to turn on/off
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Ice%20Cream%20Empire%20Tycoon.lua"))()
 else
     game.Players.LocalPlayer:Kick("Game Not Supported")
 end
