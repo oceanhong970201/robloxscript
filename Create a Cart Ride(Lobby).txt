@@ -1,0 +1,161 @@
+if not game:IsLoaded() then
+    repeat wait() until game:IsLoaded()
+end
+if _G.Theme == "" then
+    _G.Theme = "BloodTheme"
+end
+--\\UI//--
+local CoreGui = game:GetService("StarterGui") 
+local player = game.Players.LocalPlayer.Character.HumanoidRootPart
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib(tostring(GameName), _G.Theme)
+local Tab = Window:NewTab("Recent Update")
+local Tab1 = Window:NewTab("Main")
+local Tab6 = Window:NewTab("Others")
+local Update = Tab:NewSection("Update Logs")
+local Section = Tab1:NewSection("Farm")
+local Section6 = Tab6:NewSection("Others")
+Update:NewLabel("Latest update:2023/8/8")
+Update:NewLabel("2023/8/8")
+Update:NewLabel("[+][UPD] Create a Cart Ride!")
+Update:NewLabel("[+]Auto Complete")
+Update:NewLabel("[+](*^▽^*)")
+Update:NewLabel("[+]( $ _ $ )")
+CoreGui:SetCore("SendNotification", {
+    Title = "Game Founded",
+    Text = "Game:"..GameName,
+   Duration = 3;
+   })
+--\\functions//--
+--\\serverhop -cridit to CharWar
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+local File = pcall(function()
+    AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+end)
+if not File then
+    table.insert(AllIDs, actualHour)
+    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+end
+function TPReturner()
+    local Site;
+    if foundAnything == "" then
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+    else
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+    end
+    local ID = ""
+    if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+        foundAnything = Site.nextPageCursor
+    end
+    local num = 0;
+    for i,v in pairs(Site.data) do
+        local Possible = true
+        ID = tostring(v.id)
+        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+            for _,Existing in pairs(AllIDs) do
+                if num ~= 0 then
+                    if ID == tostring(Existing) then
+                        Possible = false
+                    end
+                else
+                    if tonumber(actualHour) ~= tonumber(Existing) then
+                        local delFile = pcall(function()
+                            delfile("NotSameServers.json")
+                            AllIDs = {}
+                            table.insert(AllIDs, actualHour)
+                        end)
+                    end
+                end
+                num = num + 1
+            end
+            if Possible == true then
+                table.insert(AllIDs, ID)
+                wait()
+                pcall(function()
+                    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                    wait()
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+                end)
+                wait(4)
+            end
+        end
+    end
+end
+
+function Teleport()
+    while wait() do
+        pcall(function()
+            TPReturner()
+            if foundAnything ~= "" then
+                TPReturner()
+            end
+        end)
+    end
+end
+--\\section//--
+Section:NewLabel("🤔🤔Looks like you are at lobby?")
+Section:NewLabel("To use auto complete, make sure you are in a challenge!")
+Section:NewLabel("Hog Rider!👶🏿👶🏿👶🏿👶🏿👶🏿👶🏿👶🏿")
+Section:NewButton("Discord Server", "Discord Server", function()
+    setclipboard("https://discord.gg/Jw43TjBDur")
+end)
+--\\Section6//--
+Section6:NewButton("Rejoin Server", "Rejoin Server", function()
+    pcall(function ()
+        spawn(function ()
+            game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+        end)
+    end)
+end)
+Section6:NewButton("ServerHop", "ServerHop", function()
+    pcall(function ()
+        spawn(function ()
+            Teleport()
+        end)
+    end)
+end)
+Section6:NewSlider("Walkspeed Changer", "Walkspeed Changer", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
+
+Section6:NewSlider("Jumppower Changer", "Jumppower Changer", 500, 0, function(a) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower  = a
+end)
+Section6:NewButton("Discord Server", "Discord Server", function()
+    setclipboard("https://discord.gg/Jw43TjBDur")
+end)
+Section6:NewKeybind("Q to toggle on/off", "Q", Enum.KeyCode.Q, function()
+	Library:ToggleUI()
+end)
+Section6:NewLabel("Made by (_　_)。゜zｚＺ#0850")
+Section6:NewLabel(".gg/Jw43TjBDur")
+Section6:NewLabel("Anti-AFK is always on")
+Section6:NewLabel("Will AutoRejoin If Kicked")
+local vu = game:GetService("VirtualUser")
+
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(1)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+getgenv().rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+    if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+        game:GetService("TeleportService"):Teleport(game.PlaceId)
+    end
+end)
+
+game:GetService("StarterGui"):SetCore("SendNotification", 
+{Title = "discord.gg/Jw43TjBDur", 
+Text = "Thanks For Using, Discord Server link copied to ur clipboard",
+Icon = "",
+Button1 = "discord.gg/Jw43TjBDur",
+Duration = math.huge
+})
+wait(.1)
+setclipboard("https://discord.gg/Jw43TjBDur")
+--\\end//--
