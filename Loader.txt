@@ -41,6 +41,8 @@ elseif game.PlaceId == 13367177208 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Ice%20Cream%20Empire%20Tycoon.lua"))()
 elseif GameName == "Cart Rider" then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Create%20a%20Cart%20Ride.lua"))()
+elseif game.PlaceId == 11727501024 and GameName == "Create a Cart Ride!" then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/oceanhong970201/robloxscript/main/Create%20a%20Cart%20Ride(Lobby).txt"))()
 else
     game.Players.LocalPlayer:Kick("Game Not Supported")
 end
