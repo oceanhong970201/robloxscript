@@ -1,0 +1,19 @@
+local stage = game:GetService("Players").LocalPlayer.leaderstats.Stage.Value + 1
+local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+local checkpoints = game:GetService("Workspace").Stages
+while Enable ==  true do
+        local stage = game:GetService("Players").LocalPlayer.leaderstats.Stage.Value + 1
+        local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+    
+        local checkpoints = game:GetService("Workspace").Stages
+        if checkpoints:FindFirstChild(tostring(stage)) and stage < 122 then
+            pcall(function ()
+                firetouchinterest(char.HumanoidRootPart, checkpoints:FindFirstChild(tostring(stage)), 0)
+                wait()
+                firetouchinterest(char.HumanoidRootPart, checkpoints:FindFirstChild(tostring(stage)), 1)
+            end)
+        elseif stage == 122  then
+            game:GetService("ReplicatedStorage"):WaitForChild("Prestige"):FireServer()
+        end
+    task.wait(delaytime)
+end
